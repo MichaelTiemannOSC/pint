@@ -1259,7 +1259,7 @@ class PlainRegistry(metaclass=RegistryMeta):
         for p in self.preprocessors:
             input_string = p(input_string)
         input_string = string_preprocessor(input_string)
-        gen = tokenizer(input_string)
+        gen = pint_eval.tokenizer(input_string)
 
         return build_eval_tree(gen).evaluate(
             lambda x: self._eval_token(x, case_sensitive=case_sensitive, **values)
