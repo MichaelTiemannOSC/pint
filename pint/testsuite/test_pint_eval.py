@@ -1,11 +1,11 @@
 import pytest
 
 from pint import pint_eval
-from pint.pint_eval import build_eval_tree
+from pint.pint_eval import build_eval_tree, tokenizer
 from pint.util import string_preprocessor
 
 # This is how we enable the parsing of uncertainties
-# pint_eval.tokenizer = pint_eval.uncertainty_tokenizer
+# tokenizer = pint_eval.uncertainty_tokenizer
 
 class TestPintEval:
     def _test_one(self, input_text, parsed, preprocess=False):

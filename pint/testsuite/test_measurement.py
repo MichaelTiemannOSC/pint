@@ -272,9 +272,9 @@ class TestMeasurement(QuantityTestCase):
         assert not (x >= y)
 
     def test_tokenization(self):
-        from pint import pint_eval
+        from pint.pint_eval import tokenizer
 
-        pint_eval.tokenizer = pint_eval.uncertainty_tokenizer
-        for p in pint_eval.tokenizer("8 + / - 4"):
+        tokenizer = pint_eval.uncertainty_tokenizer
+        for p in tokenizer("8 + / - 4"):
             print(p)
         assert True
