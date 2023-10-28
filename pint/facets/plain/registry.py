@@ -206,14 +206,13 @@ class GenericPlainRegistry(Generic[QuantityT, UnitT], metaclass=RegistryMeta):
         future release.
     """
 
-    #: Babel.Locale instance or None
-    fmt_locale: Optional[Locale] = None
-
     Quantity: type[QuantityT]
     Unit: type[UnitT]
 
     _diskcache = None
     _def_parser = None
+
+    formatter: Formatter
 
     def __init__(
         self,
@@ -240,7 +239,7 @@ class GenericPlainRegistry(Generic[QuantityT, UnitT], metaclass=RegistryMeta):
             cache_folder = appdirs.user_cache_dir(appname="pint", appauthor=False)
             cache_folder = pathlib.Path(cache_folder)
 
-        from ... import delegates  # TODO: change thiss
+        from ... import delegates  # TODO: change this
 
         if cache_folder is not None:
             self._diskcache = delegates.build_disk_cache_class(non_int_type)(
@@ -270,11 +269,8 @@ class GenericPlainRegistry(Generic[QuantityT, UnitT], metaclass=RegistryMeta):
         #: Determines if units will be converted to preffered on appropriate operations.
         self.autoconvert_to_preferred = autoconvert_to_preferred
 
-        #: Default locale identifier string, used when calling format_babel without explicit locale.
-        self.set_fmt_locale(fmt_locale)
-
-        #: sets the formatter used when plotting with matplotlib
-        self.mpl_formatter = mpl_formatter
+        #: Formatting is a delegated behavior
+        self.formatter = delegates.Formatter(fmt_locale, mpl_formatter)
 
         #: Numerical type used for non integer values.
         self._non_int_type = non_int_type

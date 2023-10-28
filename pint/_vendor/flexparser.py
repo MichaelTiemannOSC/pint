@@ -273,7 +273,7 @@ def _build_delimiter_pattern(delimiters: ty.Tuple[str, ...]) -> re.Pattern:
 DelimiterDictT = ty.Dict[str, ty.Tuple[DelimiterInclude, DelimiterAction]]
 
 
-class Spliter:
+class Splitter:
     """Content iterator splitting according to given delimiters.
 
     The pattern can be changed dynamically sending a new pattern to the generator,
@@ -458,24 +458,24 @@ class StatementIterator:
         self, content: str, delimiters: DelimiterDictT, strip_spaces: bool = True
     ):
         self._cache = collections.deque()
-        self._spliter = Spliter(content, delimiters)
+        self._splitter = Splitter(content, delimiters)
         self._strip_spaces = strip_spaces
 
     def __iter__(self):
         return self
 
     def set_delimiters(self, delimiters: DelimiterDictT):
-        self._spliter.set_delimiters(delimiters)
+        self._splitter.set_delimiters(delimiters)
         if self._cache:
             value = self.peek()
             # Elements are 1 based indexing, while splitter is 0 based.
-            self._spliter.set_position(value.start_line - 1, value.start_col)
+            self._splitter.set_position(value.start_line - 1, value.start_col)
             self._cache.clear()
 
     def _get_next_strip(self) -> Statement:
         part = ""
         while not part:
-            start_line, start_col, end_line, end_col, part = next(self._spliter)
+            start_line, start_col, end_line, end_col, part = next(self._splitter)
             lo = len(part)
             part = part.lstrip()
             start_col += lo - len(part)
@@ -494,7 +494,7 @@ class StatementIterator:
 
         part = ""
         while not part:
-            start_line, start_col, end_line, end_col, part = next(self._spliter)
+            start_line, start_col, end_line, end_col, part = next(self._splitter)
 
         return Statement.from_statement_iterator_element(
             (start_line + 1, start_col, end_line + 1, end_col, part)

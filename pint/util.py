@@ -34,7 +34,6 @@ from collections.abc import Hashable, Generator
 
 from .compat import NUMERIC_TYPES, Self
 from .errors import DefinitionSyntaxError
-from .formatting import format_unit
 from .pint_eval import build_eval_tree
 from . import pint_eval
 
@@ -43,7 +42,6 @@ from ._typing import Scalar
 if TYPE_CHECKING:
     from ._typing import QuantityOrUnitLike
     from .registry import UnitRegistry
-
 
 logger = logging.getLogger(__name__)
 logger.addHandler(NullHandler())
@@ -606,10 +604,12 @@ class UnitsContainer(Mapping[str, Scalar]):
         return f"<UnitsContainer({tmp})>"
 
     def __format__(self, spec: str) -> str:
-        return format_unit(self, spec)
+        from . import get_application_registry
+        registry = get_application_registry()
+        return registry.formatter.format_unit(self, spec, registry=None)
 
     def format_babel(self, spec: str, registry=None, **kwspec) -> str:
-        return format_unit(self, spec, registry=registry, **kwspec)
+        return registry.formatter.format_unit(self, spec, registry=registry, **kwspec)
 
     def __copy__(self):
         # Skip expensive health checks performed by __init__
@@ -677,7 +677,7 @@ class ParserHelper(UnitsContainer):
     For example:
         `3 * m ** 2` becomes ParserHelper(3, m=2)
 
-    Briefly is a UnitsContainer with a scaling factor.
+    Briefly, it is a UnitsContainer with a scaling factor.
 
     ParserHelper is a read-only mapping. All operations (even in place ones)
     return new instances.
@@ -941,7 +941,7 @@ def _is_dim(name: str) -> bool:
 class SharedRegistryObject:
     """Base class for object keeping a reference to the registree.
 
-    Such object are for now Quantity and Unit, in a number of places it is
+    Such objects are for now Quantity and Unit, in a number of places it is
     that an object from this class has a '_units' attribute.
 
     Parameters

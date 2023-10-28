@@ -25,7 +25,6 @@ from .errors import (  # noqa: F401
     UndefinedUnitError,
     UnitStrippedWarning,
 )
-from .formatting import formatter, register_unit_format
 from .registry import ApplicationRegistry, LazyRegistry, UnitRegistry
 from .util import logger, pi_theorem  # noqa: F401
 
@@ -134,7 +133,6 @@ __all__ = (
     "RedefinitionError",
     "UndefinedUnitError",
     "UnitStrippedWarning",
-    "formatter",
     "get_application_registry",
     "set_application_registry",
     "register_unit_format",

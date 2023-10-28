@@ -13,7 +13,6 @@ import re
 from typing import Generic
 
 from ...compat import ufloat
-from ...formatting import _FORMATS, extract_custom_flags, siunitx_format_unit
 from ..plain import PlainQuantity, PlainUnit, MagnitudeT
 
 MISSING = object()
@@ -127,35 +126,35 @@ class Measurement(PlainQuantity):
             spec = spec.replace("S", "").replace("P", "")
             # get SIunitx options
             # TODO: allow user to set this value, somehow
-            opts = _FORMATS["Lx"]["siopts"]
+            opts = self._FORMATS["Lx"]["siopts"]
             if opts != "":
                 opts = r"[" + opts + r"]"
             # SI requires space between "+-" (or "\pm") and the nominal value
             # and uncertainty, and doesn't accept "+/-", so this setting
             # selects the desired replacement.
-            pm_fmt = _FORMATS["Lx"]["pm_fmt"]
+            pm_fmt = self._FORMATS["Lx"]["pm_fmt"]
             mstr = format(self.magnitude, spec).replace(r"+/-", pm_fmt)
             # Also, SIunitx doesn't accept parentheses, which uncs uses with
             # scientific notation ('e' or 'E' and sometimes 'g' or 'G').
             mstr = mstr.replace("(", "").replace(")", " ")
-            ustr = siunitx_format_unit(self.units._units, self._REGISTRY)
+            ustr = self.siunitx_format_unit(self.units._units, self._REGISTRY)
             return rf"\SI{opts}{{{mstr}}}{{{ustr}}}"
 
         # standard cases
         if "L" in spec:
             newpm = pm = r"  \pm  "
-            pars = _FORMATS["L"]["parentheses_fmt"]
+            pars = self._FORMATS["L"]["parentheses_fmt"]
         elif "P" in spec:
             newpm = pm = "±"
-            pars = _FORMATS["P"]["parentheses_fmt"]
+            pars = self._FORMATS["P"]["parentheses_fmt"]
         else:
             newpm = pm = "+/-"
-            pars = _FORMATS[""]["parentheses_fmt"]
+            pars = self._FORMATS[""]["parentheses_fmt"]
 
         if "C" in spec:
             sp = ""
             newspec = spec.replace("C", "")
-            pars = _FORMATS["C"]["parentheses_fmt"]
+            pars = self._FORMATS["C"]["parentheses_fmt"]
         else:
             sp = " "
             newspec = spec
@@ -163,7 +162,7 @@ class Measurement(PlainQuantity):
         if "H" in spec:
             newpm = "&plusmn;"
             newspec = spec.replace("H", "")
-            pars = _FORMATS["H"]["parentheses_fmt"]
+            pars = self._FORMATS["H"]["parentheses_fmt"]
 
         mag = format(self.magnitude, newspec).replace(pm, sp + newpm + sp)
         if "(" in mag:

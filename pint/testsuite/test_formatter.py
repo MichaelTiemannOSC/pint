@@ -1,7 +1,8 @@
 import pytest
 
-from pint import formatting as fmt
-
+# from pint import formatting as fmt
+from pint.delegates.base_formatter import Formatter
+fmt = Formatter()
 
 class TestFormatter:
     def test_join(self):

@@ -1,7 +1,8 @@
 import pytest
 
-import pint.formatting as fmt
-
+# import pint.formatting as fmt
+from pint.delegates.base_formatter import Formatter, register_unit_format
+fmt = Formatter()
 
 @pytest.mark.filterwarnings("ignore::DeprecationWarning:pint*")
 @pytest.mark.parametrize(
@@ -55,8 +56,10 @@ def test_split_format(format, default, flag, expected):
 
 
 def test_register_unit_format(func_registry):
-    @fmt.register_unit_format("custom")
+    @register_unit_format("custom")
     def format_custom(unit, registry, **options):
+        import pytest
+        pytest.set_trace()
         return "<formatted unit>"
 
     quantity = 1.0 * func_registry.meter
@@ -64,6 +67,6 @@ def test_register_unit_format(func_registry):
 
     with pytest.raises(ValueError, match="format 'custom' already exists"):
 
-        @fmt.register_unit_format("custom")
+        @register_unit_format("custom")
         def format_custom_redefined(unit, registry, **options):
             return "<overwritten>"
