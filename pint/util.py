@@ -605,6 +605,7 @@ class UnitsContainer(Mapping[str, Scalar]):
 
     def __format__(self, spec: str) -> str:
         from . import get_application_registry
+
         registry = get_application_registry()
         return registry.formatter.format_unit(self, spec, registry=None)
 

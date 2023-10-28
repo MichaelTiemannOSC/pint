@@ -11,10 +11,9 @@ from __future__ import annotations
 import itertools
 import numbers
 import typing as ty
-import ast
 from dataclasses import dataclass
 from functools import cached_property
-from typing import Any, Optional, TYPE_CHECKING
+from typing import Any, Optional
 
 from ..._typing import Magnitude
 from ... import errors

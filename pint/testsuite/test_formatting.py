@@ -2,7 +2,9 @@ import pytest
 
 # import pint.formatting as fmt
 from pint.delegates.base_formatter import Formatter, register_unit_format
+
 fmt = Formatter()
+
 
 @pytest.mark.filterwarnings("ignore::DeprecationWarning:pint*")
 @pytest.mark.parametrize(
@@ -59,6 +61,7 @@ def test_register_unit_format(func_registry):
     @register_unit_format("custom")
     def format_custom(unit, registry, **options):
         import pytest
+
         pytest.set_trace()
         return "<formatted unit>"
 

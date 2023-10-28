@@ -51,7 +51,6 @@ from collections.abc import Iterable, Iterator
 
 if TYPE_CHECKING:
     from ..context import Context
-    from ...compat import Locale
 
     # from ..._typing import Quantity, Unit
 
